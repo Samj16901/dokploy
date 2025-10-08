@@ -30,6 +30,7 @@ WORKDIR /app
 
 # Set production
 ENV NODE_ENV=production
+ENV PUCK_DATA_DIR=/var/lib/dokploy/puck
 
 RUN apt-get update && apt-get install -y curl unzip zip apache2-utils iproute2 rsync git-lfs && git lfs install && rm -rf /var/lib/apt/lists/*
 
@@ -63,6 +64,9 @@ RUN curl -sSL https://railpack.com/install.sh | bash
 
 # Install buildpacks
 COPY --from=buildpacksio/pack:0.35.0 /usr/local/bin/pack /usr/local/bin/pack
+
+# Create puck data directory
+RUN mkdir -p /var/lib/dokploy/puck
 
 EXPOSE 3000
 CMD [ "pnpm", "start" ]
