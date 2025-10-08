@@ -126,6 +126,40 @@ For detailed documentation, visit [docs.dokploy.com](https://docs.dokploy.com).
   <img src="https://contrib.rocks/image?repo=dokploy/dokploy" alt="Contributors" />
 </a>
 
+## 🎨 Puck Editor Integration
+
+Dokploy now includes a visual page builder powered by [Puck](https://puckeditor.com/) that allows you to create custom dashboards with a drag-and-drop interface.
+
+### Features
+
+- **Visual Editing**: Build custom dashboards with a drag-and-drop interface
+- **Built-in Blocks**: StatCard, Grid, Markdown, and ChartStub components
+- **Persistent Storage**: Dashboard configurations are stored as JSON files
+- **Role-Based Access**: Only admin users can edit dashboards
+
+### Usage
+
+1. **Access the Editor**: Navigate to `/edit/dashboard` (requires admin role)
+2. **Edit Dashboard**: Drag and drop components to build your custom dashboard
+3. **Publish Changes**: Click "Publish" to save your changes
+4. **View Dashboard**: Navigate to `/dashboard/projects` to see your custom dashboard
+
+### Environment Variables
+
+- `PUCK_DATA_DIR`: Directory for storing Puck data (default: `./data/puck`, production: `/var/lib/dokploy/puck`)
+
+### Docker Volume
+
+In production, the Puck data is persisted in a Docker volume mounted at `/var/lib/dokploy/puck`.
+
+### Seed Data
+
+To initialize with sample dashboard data, run:
+
+```bash
+pnpm tsx scripts/seed-puck.ts
+```
+
 ## 📺 Video Tutorial
 
 <a href="https://youtu.be/mznYKPvhcfw">

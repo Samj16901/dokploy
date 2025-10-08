@@ -1,11 +1,16 @@
 import { validateRequest } from "@dokploy/server/lib/auth";
+import { Render } from "@measured/puck";
+import "@measured/puck/puck.css";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import type { GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import type { ReactElement } from "react";
+import { useState, useEffect } from "react";
 import superjson from "superjson";
 import { ShowProjects } from "@/components/dashboard/projects/show";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
+import { puckConfig, type PuckData } from "@/lib/puck/config";
 import { appRouter } from "@/server/api/root";
 import { api } from "@/utils/api";
 
@@ -19,9 +24,45 @@ const ShowWelcomeDokploy = dynamic(
 
 const Dashboard = () => {
 	const { data: isCloud } = api.settings.isCloud.useQuery();
+	const { data: user } = api.user.get.useQuery();
+	const [puckData, setPuckData] = useState<PuckData | null>(null);
+
+	useEffect(() => {
+		const fetchPuckData = async () => {
+			try {
+				const response = await fetch("/api/puck/dashboard");
+				if (response.ok) {
+					const data = await response.json();
+					setPuckData(data);
+				}
+			} catch (err) {
+				console.error("Failed to load Puck data:", err);
+			}
+		};
+
+		fetchPuckData();
+	}, []);
+
 	return (
 		<>
 			{isCloud && <ShowWelcomeDokploy />}
+
+			{user?.role === "owner" && (
+				<div className="mb-4">
+					<Link
+						href="/edit/dashboard"
+						className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+					>
+						Edit Dashboard
+					</Link>
+				</div>
+			)}
+
+			{puckData && (
+				<div className="mb-6">
+					<Render config={puckConfig} data={puckData} />
+				</div>
+			)}
 
 			<ShowProjects />
 		</>
