@@ -25,7 +25,7 @@ describe("Puck API Routes", () => {
 
 	beforeEach(() => {
 		jsonMock = vi.fn();
-		statusMock = vi.fn().mockReturnValue({ json: jsonMock });
+		statusMock = vi.fn().mockReturnValue({ json: jsonMock }) as any;
 
 		req = {
 			method: "GET",
@@ -33,7 +33,7 @@ describe("Puck API Routes", () => {
 		};
 
 		res = {
-			status: statusMock,
+			status: statusMock as any,
 			json: jsonMock
 		};
 
